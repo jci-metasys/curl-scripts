@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# Purpose: Illustrates how to use curl to call the Metasys API
+#          APIs that are used are login, networkDevices and objects.
+
+# Prompte user for credentials and name of Metasys Server
+read -p 'username: ' USERNAME
+read -s -p 'password: ' PASSWORD
+echo
+read -p 'host: ' HOST
+
+OUTPUT_DIR=output
+
+# create output director if it doesn't exist
+if [ ! -d $OUTPUT_DIR ]; then
+    mkdir $OUTPUT_DIR
+fi
+
+
+# Format the login payload with the help of jq
+LOGIN_PAYLOAD=$(echo '{}' | \
+  jq -c --arg user $USERNAME --arg pass $PASSWORD '{ "username": $user, "password": $pass }')
+
+# login - When this runs the results of the call are saved to $OUTPUT_DIR/login-result.json
+echo Make login request
+curl \
+     $@ \
+     -s \
+     --location \
+     --output $OUTPUT_DIR/login-result.json \
+     --dump-header $OUTPUT_DIR/login-headers.txt \
+     --request POST \
+     --header "Content-Type: application/json" \
+     --data "$LOGIN_PAYLOAD" \
+"https://$HOST/api/api/authentication/login"
+
+
+
+# Extract the access_token out of the login-result file and store it separtely
+jq -r ".access_token" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.txt
+
+token_header="Authorization: Bearer $(cat $OUTPUT_DIR/access_token.txt)"
+
+echo
+echo Getting first page of network devices
+# Get the first page of network devices from the server.
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/networkDevices | jq . > $OUTPUT_DIR/devices-full.json
+
+# Use jq filters to store a list of abbreviated devices that contain only id, name, item reference and description
+cat $OUTPUT_DIR/devices-full.json | jq '.items | [.[] | {id, name, itemReference, description}]' > $OUTPUT_DIR/devices.json
+
+# Use jq to look up the id of the first device in the list
+first_device_id=$(jq -r '.[0].id' $OUTPUT_DIR/devices.json)
+
+echo
+echo Getting first page of objects for the first device
+# Get the first page of objects for the first device
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/objects | jq . > $OUTPUT_DIR/objects.json
+
+echo
+echo Getting the first page of alarms for the first device
+# Get the first page of alarms for the first device
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/alarms | jq . > $OUTPUT_DIR/alarms-first-device.json
+
+echo
+echo Getting the first page of audits for the first device
+# Get the first page of audits for the first device
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/audits | jq . > $OUTPUT_DIR/audits-first-device.json
+
+echo
+echo Getting the first page of equipment
+# Get the first page of equipment 
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/equipment | jq . > $OUTPUT_DIR/equipment.json 
+
+echo
+echo Getting the first page of spaces
+# Get the first page of spaces
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/spaces | jq . > $OUTPUT_DIR/spaces.json
+
+echo
+echo Getting the first page of alarms for the entire site
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/alarms | jq . > $OUTPUT_DIR/alarms.json
+
+echo
+echo Getting the first page of audts for the entire site
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/audits | jq . > $OUTPUT_DIR/alarms.json
+
+echo
+echo Getting the first 1000 enum sets 
+curl $@ -s -L -H "$token_header" https://$HOST/api/v1/enumSets?pageSize=1000 | jq . > $OUTPUT_DIR/enumSets.json
+
+
+export token_header

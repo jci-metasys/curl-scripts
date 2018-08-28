@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Purpose: Illustrates how to use curl to call the Metasys API
+#          APIs that are used are login and networkDevices
+
+# Prompt user for credentials and name of Metasys Server
+read -p 'username: ' USERNAME
+read -s -p 'password: ' PASSWORD
+echo
+read -p 'host: ' HOST
+
+# create output directory if it doesn't exist
+OUTPUT_DIR=output
+if [ ! -d $OUTPUT_DIR ]; then
+    mkdir $OUTPUT_DIR
+else
+    rm -f $OUTPUT_DIR/login-headers.txt
+    rm -f $OUTPUT_DIR/login-result.json
+    rm -f $OUTPUT_DIR/devices-headers.txt
+    rm -f $OUTPUT_DIR/devices.json
+    rm -f $OUTPUT_DIR/access_token.txt
+fi
+
+# Checks status code to make sure it is in the 100-200 range. If it is, no action is taken.
+# If the status code is greater than or equal to 300 a message is displayed to the user
+# and the script terminates.
+#
+# usage: assertNoErrorOrExit <status> <header> <body>
+# $1 - status - An http status code obtained by a 
+# $2 - headers - A file that contains the headers from the request. 
+# $3 - body - A file that contains the response body from the request.
+function assertNoErrorOrExit
+{
+  status=$1
+  headers=$2
+  body=$3
+
+  if [ $status = 000 ] || [ $status -ge 300 ]; then
+    if [ -e $headers ]; then
+      cat $headers
+    fi
+    if [ -e $body ]; then
+      jq . $body
+    fi
+    echo "* There was an issue with the request. "
+    exit
+  fi
+}
+
+
+# Login to Metasys server:
+
+# Format the login payload with the help of jq
+LOGIN_PAYLOAD=$(echo '{}' | \
+  jq -c --arg user $USERNAME --arg pass $PASSWORD '{ "username": $user, "password": $pass }')
+
+echo "Logging In"
+
+status=$(curl \
+     $@ \
+     -s \
+     -S \
+     -w %{http_code} \
+     --location \
+     --output $OUTPUT_DIR/login-result.json \
+     --dump-header $OUTPUT_DIR/login-headers.txt \
+     --request POST \
+     --header "Content-Type: application/json" \
+     --data "$LOGIN_PAYLOAD" \
+"https://$HOST/api/api/authentication/login")
+
+
+assertNoErrorOrExit $status $OUTPUT_DIR/login-headers.txt $OUTPUT_DIR/login-result.json 
+
+
+# Extract the access_token out of the login-result file and store it separtely
+jq -r ".access_token" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.txt
+
+
+token_header="Authorization: Bearer $(cat $OUTPUT_DIR/access_token.txt)"
+
+echo
+echo "Fetching devices"
+# Get the first page of network devices from the server.
+status=$(curl $@ -s -S -L -w %{http_code} -D $OUTPUT_DIR/devices-headers.txt -o $OUTPUT_DIR/devices.json -H "$token_header" https://$HOST/api/v1/networkDevices)
+
+
+assertNoErrorOrExit $status $OUTPUT_DIR/devices-headers.txt $OUTPUT_DIR/devices.json
+
+jq . $OUTPUT_DIR/devices.json

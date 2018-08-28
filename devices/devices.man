@@ -1,0 +1,19 @@
+.\" Manpage for devices
+.\" Contact michael.g.welch@jci.com to correct errors or typos.
+.TH man 1 "25 Aug 2018" "1.0" "devices man page"
+.SH NAME
+devices \- list devices on a Metasys site
+.SH SYNOPSIS
+devices [options]
+.SH DESCRIPTION
+devices is a simple app that will authenticate to a Metasys Server
+and fetch the list of devices. You will be prompted for username,
+password and hostname.
+.SH OPTIONS
+The devices app allows you to specify any additional curl options
+you may need. Typical examples might be --insecure or --ca to specify
+a certificate.
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Michael Welch (michael.g.welch@jci.com)
