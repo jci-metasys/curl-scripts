@@ -49,9 +49,9 @@ function assertNoErrorOrExit
 
 # Login to Metasys server:
 
-# Format the login payload with the help of jq
-LOGIN_PAYLOAD=$(echo '{}' | \
-  jq -c --arg user $USERNAME --arg pass $PASSWORD '{ "username": $user, "password": $pass }')
+# The login payload is a simple JSON document: { "username": "joe", "password", "x1fjds8eu" }
+# It just takes a little escaping to make this work
+LOGIN_PAYLOAD='{ "username": "'$USERNAME'", "password": "'$PASSWORD'" }'
 
 echo "Logging In"
 
@@ -72,11 +72,11 @@ status=$(curl \
 assertNoErrorOrExit $status $OUTPUT_DIR/login-headers.txt $OUTPUT_DIR/login-result.json 
 
 
-# Extract the access_token out of the login-result file and store it separtely
+# Extract the access_token out of the login-result file and store it separately
 jq -r ".accessToken" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.txt
 
 
-token_header="Authorization: Bearer $(cat $OUTPUT_DIR/access_token.txt)"
+token_header="Authorization: Bearer $(< $OUTPUT_DIR/access_token.txt)"
 
 echo
 echo "Fetching devices"
@@ -87,3 +87,5 @@ status=$(curl $@ -s -S -L -w %{http_code} -D $OUTPUT_DIR/devices-headers.txt -o 
 assertNoErrorOrExit $status $OUTPUT_DIR/devices-headers.txt $OUTPUT_DIR/devices.json
 
 jq . $OUTPUT_DIR/devices.json
+
+echo "See output/ directory for all saved data"
