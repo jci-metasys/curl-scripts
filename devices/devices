@@ -66,14 +66,14 @@ status=$(curl \
      --request POST \
      --header "Content-Type: application/json" \
      --data "$LOGIN_PAYLOAD" \
-"https://$HOST/api/api/authentication/login")
+"https://$HOST/api/v1/login")
 
 
 assertNoErrorOrExit $status $OUTPUT_DIR/login-headers.txt $OUTPUT_DIR/login-result.json 
 
 
 # Extract the access_token out of the login-result file and store it separtely
-jq -r ".access_token" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.txt
+jq -r ".accessToken" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.txt
 
 
 token_header="Authorization: Bearer $(cat $OUTPUT_DIR/access_token.txt)"
