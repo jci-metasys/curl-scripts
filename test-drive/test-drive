@@ -31,7 +31,7 @@ curl \
      --request POST \
      --header "Content-Type: application/json" \
      --data "$LOGIN_PAYLOAD" \
-"https://$HOST/api/api/authentication/login"
+"https://$HOST/api/v1/login"
 
 
 
