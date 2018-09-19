@@ -47,7 +47,7 @@ Assuming this file was named `credentials.json` you can get an access token with
 (Note: The accessToken shown has been truncated for sake of space.)
 
 ```bash
-$ curl --data-binary @credentials.json -L -H "Content-Type application/json" https://hostname/api/v1/login
+$ curl --data-binary @credentials.json -L -H "Content-Type: application/json" https://hostname/api/v1/login
 {"accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJ...","expires":"2018-09-17T19:38:58Z"}
 ```
 
