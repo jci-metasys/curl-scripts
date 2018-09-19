@@ -63,3 +63,19 @@ Here is a description of each file
 
 If something goes wrong these files will contain the headers and response bodies to help you
 debug.
+
+## Certificate Issues
+
+Curl checks the certificates of your server. If the certificate is not trusted then the curl operations will fail. Here are some workarounds. See [SSL Certification Verification](https://curl.haxx.se/docs/sslcerts.html) for more information.
+
+1. Manually add the certificate to your local keystore and mark it as trusted
+2. Export the certificate in pem format and pass it on the command line. The following example assumes you have done this and named the file `server-certificate.pem`
+
+    ```shell
+    ./devices --ca-cert server-certificate.pem
+    ```
+3. Use the `--insecure` option. **Note:** this is not recommended for production environments.
+
+    ```shell
+    ./devices --insecure
+    ```
