@@ -81,9 +81,7 @@ for space.)
 ```json
 $ TOKEN=$(curl --data-binary @credentials.json -L -H "Content-Type: application/json" https://hostname/api/v1/login | jq -r .accessToken)
 $ curl -L -H "Authorization: $TOKEN" https://hostname/api/v1/networkDevices
-{"total":12,"next":null,"previous":null,"items":[{"id":"f55a7799-ec10-5361-8569-04258bdd8070","itemReference":"Test-pc1:Test-NAE5510","name":"Test-NAE5510","type":"/enumSets/508/members/185","description":"Auth Cat Fire","firmwareVersion":"8.0.0.0449","category":"/enumSets/33/members/1","timeZone":"/enumSets/576/members/53","self":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070","parent":null,"networkDevices":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/networkDevices","equipment":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/equipment","spaces":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/spaces","objects":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/objects","attributes":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/attributes","alarms":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/alarms"},
-...
-}
+{"total":12,"next":null,"previous":null,"items":[{"id":"f55a7799-ec10-5361-8569-04258bdd8070","itemReference":"Test-pc1:Test-NAE5510","name":"Test-NAE5510","type":"/enumSets/508/members/185","description":"Auth Cat Fire","firmwareVersion":"8.0.0.0449","category":"/enumSets/33/members/1","timeZone":"/enumSets/576/members/53","self":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070","parent":null,"networkDevices":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/networkDevices","equipment":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/equipment","spaces":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/spaces","objects":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/objects","attributes":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/attributes","alarms":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/alarms"},...]}
 $ unset TOKEN
 ```
 
