@@ -15,7 +15,7 @@ The script requires a username, password and hostname.
 You will be prompted for these every time you run the script.
 
 ```shell
-$ ./get-all
+$ ./test-drive
 username: johnsmith
 password:
 host: adx-server

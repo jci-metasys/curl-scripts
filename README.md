@@ -133,3 +133,13 @@ $ curl -L -H "Authorization: $TOKEN" https://hostname/api/v1/networkDevices | jq
 }
 $ unset TOKEN
 ```
+
+## Certificate Issues
+
+Curl checks the certificates of your server. If the certificate is not trusted then the curl operations will fail. Here are some workarounds. See [SSL Certification Verification](https://curl.haxx.se/docs/sslcerts.html) for more information.
+
+1. Manually add the certificate to your local keystore and mark it as trusted
+2. Export the certificate in pem format and pass it on the command line.
+3. Use the `--insecure` option. **Note:** this is not recommended for production environments.
+
+There are examples of how to use the last 2 options in the READMEs of the subfolders: [devices](./devices/README.md#certificate-issues), [test-drive](./test-drive/README.md#certificate-issues).
