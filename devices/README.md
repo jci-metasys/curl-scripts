@@ -47,8 +47,8 @@ If everything works correctly, the `output` directory will contain 5 files:
 
 ```shell
 $ ls output
-access_token.txt	devices.json		login-result.json
-devices-headers.txt	login-headers.txt
+access_token.txt     devices.json        login-result.json
+devices-headers.txt  login-headers.txt
 ```
 
 Here is a description of each file
@@ -63,6 +63,16 @@ Here is a description of each file
 
 If something goes wrong these files will contain the headers and response bodies to help you
 debug.
+
+## Protect The Access Token
+
+You must protect any access token you get from the Metasys Server. Anyone with access to this token
+can impersonate you for the life of the session associated with that token.
+
+This program stores an access token in two files in the `output/` directory (`output/login-result.json` and `output/access_token.txt`).
+
+> **This is solely for
+educational purposes to allow a developer to inspect the results. This is not a recommended practice for a production system. You are responsible for protecting your access tokens.**
 
 ## Certificate Issues
 

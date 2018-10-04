@@ -45,6 +45,16 @@ Get the first 1000 enum sets
 
 The results of each call are saved to a file in the `output` directory.
 
+## Protect The Access Token
+
+You must protect any access token you get from the Metasys Server. Anyone with access to this token
+can impersonate you for the life of the session associated with that token.
+
+This program stores an access token in two files in the `output/` directory (`output/login-result.json` and `output/access_token.txt`).
+
+> **This is solely for
+educational purposes to allow a developer to inspect the results. This is not a recommended practice for a production system. You are responsible for protecting your access tokens.**
+
 ## Certificate Issues
 
 Curl checks the certificates of your server. If the certificate is not trusted then the curl operations will fail. Here are some workarounds. See [SSL Certification Verification](https://curl.haxx.se/docs/sslcerts.html) for more information.
@@ -60,19 +70,3 @@ Curl checks the certificates of your server. If the certificate is not trusted t
     ```shell
     ./test-drive --insecure
     ```
-
-## Protect The Access Token
-
-You must protect any access token you get from the Metasys Server. Anyone with access to this token
-can impersonate you for the life of the session associated with that token.
-
-This program stores an access token in two files in the `output/` directory (`output/login-result.json` and `output/access_token.txt`). 
-
-> **This is solely for
-instructional purposes to allow a developer to inspect the results. This is not a recommended practice for a production system. You are responsible for protecting your access tokens.**
-
-## Further Resources
-
-* curl
-* jq
-* bash
