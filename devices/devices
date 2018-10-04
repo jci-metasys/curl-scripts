@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Purpose: Illustrates how to use curl to call the Metasys API
+# Purpose: Illustrates how to use curl to call the Metasys® API
 #          APIs that are used are login and networkDevices
 
-# Prompt user for credentials and name of Metasys Server
+# Prompt user for credentials and name of Metasys® Server
 read -p 'username: ' USERNAME
 read -s -p 'password: ' PASSWORD
 echo
@@ -47,7 +47,7 @@ function assertNoErrorOrExit
 }
 
 
-# Login to Metasys server:
+# Login to Metasys® server:
 
 # The login payload is a simple JSON document: { "username": "joe", "password", "x1fjds8eu" }
 # It just takes a little escaping to make this work
