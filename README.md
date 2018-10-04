@@ -1,9 +1,9 @@
 # Curl Scripts
 
-> **Note** The scripts and documentation in this repository reference pre-release Metasys® documentation and are subject to change prior to release.
+> **Note** The scripts and documentation in this repository reference pre-release *Metasys*® documentation and are subject to change prior to release.
 
 The scripts in this directory show the basics of accessing
-the Metasys Server API from the command line using `curl`.
+the *Metasys*® Server API from the command line using `curl`.
 
 These scripts have the following dependencies:
 
@@ -23,7 +23,7 @@ They are located in their own respective folders.
 
 ## Getting Started with Curl
 
-You can make requests of Metasys right from the command line given you have `curl`. The `jq` utility
+You can make requests of *Metasys*® right from the command line given you have `curl`. The `jq` utility
 will also come in handy for processing the JSON responses you get from the server.
 
 This example will show you how to get an access token and fetch the first page of devices.
@@ -52,7 +52,7 @@ $ curl --data-binary @credentials.json -L -H "Content-Type: application/json" ht
 {"accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJ...","expires":"2018-09-17T19:38:58Z"}
 ```
 
-**Warning** Be sure to protect your access tokens as they grant anyone who has one access to Metasys.
+**Warning** Be sure to protect your access tokens as they grant anyone who has one access to *Metasys*®.
 
 *Explanation* We have used the `--data-binary` option to specify a file that contains the payload we need to send to the server. The `-L` option instructs curl to follow redirects. The `-H` option specifies a `Content-Type` header
 which is required so the server know how to interpret the data we send it. The server responds by returning
@@ -60,7 +60,7 @@ a JSON document with two fields: `accessToken` and `expires`. The `expires` fiel
 
 ### Use Access Token to Access a Resource
 
-Here's how you might use this access token to access one of the Metasys® APIs:
+Here's how you might use this access token to access one of the *Metasys*® APIs:
 
 ```bash
 curl -L -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJ..." https://hostname/api/v1/networkDevices

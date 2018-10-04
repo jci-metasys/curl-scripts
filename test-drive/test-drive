@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Purpose: Illustrates how to use curl to call the Metasys API
+# Purpose: Illustrates how to use curl to call the Metasys® API
 #          APIs that are used are login, networkDevices and objects.
 
-# Prompte user for credentials and name of Metasys Server
+# Prompte user for credentials and name of Metasys® Server
 read -p 'username: ' USERNAME
 read -s -p 'password: ' PASSWORD
 echo

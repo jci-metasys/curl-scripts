@@ -1,6 +1,6 @@
 # Test Drive
 
-This bash script `test-drive` demonstrates how to call most of the endpoints supported by Metasys Server.
+This bash script `test-drive` demonstrates how to call most of the endpoints supported by *Metasys*® Server.
 
 These scripts have the following dependencies:
 
@@ -63,7 +63,7 @@ Curl checks the certificates of your server. If the certificate is not trusted t
 
 ## Protect The Access Token
 
-You must protect any access token you get from the Metasys Server. Anyone with access to this token
+You must protect any access token you get from the *Metasys*® Server. Anyone with access to this token
 can impersonate you for the life of the session associated with that token.
 
 This program stores an access token in two files in the `output/` directory (`output/login-result.json` and `output/access_token.txt`). 

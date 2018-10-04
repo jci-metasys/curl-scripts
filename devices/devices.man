@@ -2,11 +2,11 @@
 .\" Contact michael.g.welch@jci.com to correct errors or typos.
 .TH man 1 "25 Aug 2018" "1.0" "devices man page"
 .SH NAME
-devices \- list devices on a Metasys site
+devices \- list devices on a \fIMetasys\fR\[u00AE] site
 .SH SYNOPSIS
 devices [options]
 .SH DESCRIPTION
-devices is a simple app that will authenticate to a Metasys Server
+devices is a simple app that will authenticate to a \fIMetasys\fR\[u00AE] Server
 and fetch the list of devices. You will be prompted for username,
 password and hostname.
 .SH OPTIONS
