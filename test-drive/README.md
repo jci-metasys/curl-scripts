@@ -1,6 +1,6 @@
 # Test Drive
 
-This bash script `test-drive` demonstrates how to call most of the endpoints supported by Metasys Server.
+This bash script `test-drive` demonstrates how to call most of the endpoints supported by *Metasys*® Server.
 
 These scripts have the following dependencies:
 
@@ -70,3 +70,9 @@ Curl checks the certificates of your server. If the certificate is not trusted t
     ```shell
     ./test-drive --insecure
     ```
+    
+## Further Resources
+
+* curl
+* jq
+* bash
