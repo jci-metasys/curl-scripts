@@ -79,6 +79,8 @@ curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJ..." https://hostname/
 We are using the `-H` option to specify an `Authorization` header which is used to pass our access token.
 The content of the header is the word `Bearer` followed by a space and then our access token that we got in the previous step.
 
+**Note** If you are using cygwin in the old windows terminal your copy/paste may fail as it inserts line breaks to format to the screen. Skip ahead to the next section or paste to a text file and manually remove the line breaks before using the token.
+
 ### Putting it all together
 
 To avoid having to copy/paste the access token we can use `jq` to extract the `accessToken` out of the
