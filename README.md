@@ -7,6 +7,7 @@ the *Metasys*® Server API from the command line using `curl`.
 
 These scripts have the following dependencies:
 
+* bash (or zsh) - These scripts assume a "unix-like" shell. Tested with bash and zsh.
 * curl - standard on mac, unix and linux. Available for Windows
   thru Windows Subsystem for Linux (WSL), cygwin or chocolatey
 
