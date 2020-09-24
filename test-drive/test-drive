@@ -31,7 +31,7 @@ curl \
      --request POST \
      --header "Content-Type: application/json" \
      --data "$LOGIN_PAYLOAD" \
-"https://$HOST/api/v1/login"
+"https://$HOST/api/v2/login"
 
 
 
@@ -41,9 +41,11 @@ jq -r ".accessToken" $OUTPUT_DIR/login-result.json > $OUTPUT_DIR/access_token.tx
 token_header="Authorization: Bearer $(< $OUTPUT_DIR/access_token.txt)"
 
 echo
-echo Getting first page of network devices
+echo Getting first page of network devices:
+echo "  https://$HOST/api/v2/networkDevices"
 # Get the first page of network devices from the server.
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/networkDevices | jq . > $OUTPUT_DIR/devices-full.json
+# Note: the $@ in each curl command contains any parameters passed into this script (like --insecure for example)
+curl $@ -s -H "$token_header" https://$HOST/api/v2/networkDevices | jq . > $OUTPUT_DIR/devices-full.json
 
 # Use jq filters to store a list of abbreviated devices that contain only id, name, item reference and description
 cat $OUTPUT_DIR/devices-full.json | jq '.items | [.[] | {id, name, itemReference, description}]' > $OUTPUT_DIR/devices.json
@@ -52,41 +54,54 @@ cat $OUTPUT_DIR/devices-full.json | jq '.items | [.[] | {id, name, itemReference
 first_device_id=$(jq -r '.[0].id' $OUTPUT_DIR/devices.json)
 
 echo
-echo Getting first page of objects for the first device
+echo Getting first page of objects for the first device:
+echo "  https://$HOST/api/v2/objects/$first_device_id/objects"
 # Get the first page of objects for the first device
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/objects | jq . > $OUTPUT_DIR/objects.json
+curl $@ -s -H "$token_header" https://$HOST/api/v2/objects/$first_device_id/objects | jq . > $OUTPUT_DIR/objects.json
+
+# use jq to look up the id of the first object in the list so we can request the default view of the object
+first_object_id=$(jq -r '.items[0].id' $OUTPUT_DIR/objects.json)
+
+echo
+echo Getting the default view of the first object in the list with schema
+echo "  https://$HOST/api/v2/objects/$first_object_id?includeSchema=true"
+curl $@ -s -H "$token_header" https://$HOST/api/v2/objects/$first_object_id?includeSchema=true | jq . > $OUTPUT_DIR/first-object.json
 
 echo
 echo Getting the first page of alarms for the first device
+echo "  https://$HOST/api/v2/objects/$first_device_id/alarms"
 # Get the first page of alarms for the first device
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/alarms | jq . > $OUTPUT_DIR/alarms-first-device.json
+curl $@ -s -H "$token_header" https://$HOST/api/v2/objects/$first_device_id/alarms | jq . > $OUTPUT_DIR/alarms-first-device.json
 
 echo
 echo Getting the first page of audits for the first device
+echo "  https://$HOST/api/v2/objects/$first_device_id/audits"
 # Get the first page of audits for the first device
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/objects/$first_device_id/audits | jq . > $OUTPUT_DIR/audits-first-device.json
+curl $@ -s -H "$token_header" https://$HOST/api/v2/objects/$first_device_id/audits | jq . > $OUTPUT_DIR/audits-first-device.json
 
 echo
 echo Getting the first page of equipment
-# Get the first page of equipment 
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/equipment | jq . > $OUTPUT_DIR/equipment.json 
+echo "  https://$HOST/api/v2/equipment"
+# Get the first page of equipment
+curl $@ -s -H "$token_header" https://$HOST/api/v2/equipment | jq . > $OUTPUT_DIR/equipment.json
 
 echo
 echo Getting the first page of spaces
+echo "  https://$HOST/api/v2/spaces"
 # Get the first page of spaces
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/spaces | jq . > $OUTPUT_DIR/spaces.json
+curl $@ -s -H "$token_header" https://$HOST/api/v2/spaces | jq . > $OUTPUT_DIR/spaces.json
 
 echo
 echo Getting the first page of alarms for the entire site
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/alarms | jq . > $OUTPUT_DIR/alarms.json
+echo "  https://$HOST/api/v2/alarms"
+curl $@ -s -H "$token_header" https://$HOST/api/v2/alarms | jq . > $OUTPUT_DIR/alarms.json
 
 echo
 echo Getting the first page of audts for the entire site
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/audits | jq . > $OUTPUT_DIR/alarms.json
+echo "  https://$HOST/api/v2/audits"
+curl $@ -s -H "$token_header" https://$HOST/api/v2/audits | jq . > $OUTPUT_DIR/alarms.json
 
 echo
-echo Getting the first 1000 enum sets 
-curl $@ -s -L -H "$token_header" https://$HOST/api/v1/enumSets?pageSize=1000 | jq . > $OUTPUT_DIR/enumSets.json
-
-
-export token_header
+echo Getting the first 1000 enum sets
+echo "  https://$HOST/api/v2/enumSets?pageSize=1000"
+curl $@ -s -H "$token_header" https://$HOST/api/v2/enumSets?pageSize=1000 | jq . > $OUTPUT_DIR/enumSets.json

@@ -25,8 +25,8 @@ fi
 # and the script terminates.
 #
 # usage: assertNoErrorOrExit <status> <header> <body>
-# $1 - status - An http status code obtained by a 
-# $2 - headers - A file that contains the headers from the request. 
+# $1 - status - An http status code obtained by a
+# $2 - headers - A file that contains the headers from the request.
 # $3 - body - A file that contains the response body from the request.
 function assertNoErrorOrExit
 {
@@ -66,10 +66,10 @@ status=$(curl \
      --request POST \
      --header "Content-Type: application/json" \
      --data "$LOGIN_PAYLOAD" \
-"https://$HOST/api/v1/login")
+"https://$HOST/api/v2/login")
 
 
-assertNoErrorOrExit $status $OUTPUT_DIR/login-headers.txt $OUTPUT_DIR/login-result.json 
+assertNoErrorOrExit $status $OUTPUT_DIR/login-headers.txt $OUTPUT_DIR/login-result.json
 
 
 # Extract the access_token out of the login-result file and store it separately
@@ -81,7 +81,7 @@ token_header="Authorization: Bearer $(< $OUTPUT_DIR/access_token.txt)"
 echo
 echo "Fetching devices"
 # Get the first page of network devices from the server.
-status=$(curl $@ -s -S -L -w %{http_code} -D $OUTPUT_DIR/devices-headers.txt -o $OUTPUT_DIR/devices.json -H "$token_header" https://$HOST/api/v1/networkDevices)
+status=$(curl $@ -s -S -L -w %{http_code} -D $OUTPUT_DIR/devices-headers.txt -o $OUTPUT_DIR/devices.json -H "$token_header" https://$HOST/api/v2/networkDevices)
 
 
 assertNoErrorOrExit $status $OUTPUT_DIR/devices-headers.txt $OUTPUT_DIR/devices.json
