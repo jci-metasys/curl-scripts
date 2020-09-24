@@ -1,6 +1,6 @@
 # Test Drive
 
-This bash script `test-drive` demonstrates how to call most of the endpoints supported by *Metasys*® Server.
+This bash script `test-drive` demonstrates how to call many of the endpoints supported by *Metasys*® Server REST API (version 2).
 
 These scripts have the following dependencies:
 
@@ -22,23 +22,35 @@ host: adx-server
 
 Make login request
 
-Get first page of network devices
+Getting first page of network devices:
+  https://adx-server/api/v2/networkDevices
 
-Get first page of objects for the first device
+Getting first page of objects for the first device:
+  https://adx-server/api/v2/objects/bd240c93-9fd8-5590-ae79-89b51fdf21ff/objects
 
-Get the first page of alarms for the first device
+Getting the default view of the first object in the list with schema
+  https://adx-server/api/v2/objects/403c7f8b-c6f3-5061-b10d-bcab0beca0e2?includeSchema=true
 
-Get the first page of audits for the first device
+Getting the first page of alarms for the first device
+  https://adx-server/api/v2/objects/bd240c93-9fd8-5590-ae79-89b51fdf21ff/alarms
 
-Get the first page of equipment
+Getting the first page of audits for the first device
+  https://adx-server/api/v2/objects/bd240c93-9fd8-5590-ae79-89b51fdf21ff/audits
 
-Get the first page of spaces
+Getting the first page of equipment
+  https://adx-server/api/v2/equipment
 
-Get the first page of alarms for the entire site
+Getting the first page of spaces
+  https://adx-server/api/v2/spaces
 
-Get the first page of audts for the entire site
+Getting the first page of alarms for the entire site
+  https://adx-server/api/v2/alarms
 
-Get the first 1000 enum sets
+Getting the first page of audts for the entire site
+  https://adx-server/api/v2/audits
+
+Getting the first 1000 enum sets
+  https://adx-server/api/v2/enumSets?pageSize=1000
 ```
 
 ## Output
@@ -70,7 +82,7 @@ Curl checks the certificates of your server. If the certificate is not trusted t
     ```shell
     ./test-drive --insecure
     ```
-    
+
 ## Further Resources
 
 * curl
