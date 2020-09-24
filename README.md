@@ -1,6 +1,6 @@
 # Curl Scripts
 
-> **Note** The scripts and documentation in this repository reference pre-release *Metasys*® documentation and are subject to change prior to release.
+> **Note** The scripts and documentation in this repository were written against version 2 of the *Metasys*® REST API.
 
 The scripts in this directory show the basics of accessing
 the *Metasys*® Server API from the command line using `curl`.
@@ -48,22 +48,31 @@ Assuming this file was named `credentials.json` you can get an access token with
 (Note: The accessToken shown has been truncated for sake of space.)
 
 ```bash
-$ curl --data-binary @credentials.json -L -H "Content-Type: application/json" https://hostname/api/v1/login
+$ curl --data-binary @credentials.json -H "Content-Type: application/json" https://hostname/api/v2/login
 {"accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJ...","expires":"2018-09-17T19:38:58Z"}
 ```
 
-**Warning** Be sure to protect your access tokens as they grant anyone who has one access to *Metasys*®.
+**Warning** Be sure to protect your access tokens as they grant anyone who has one access to your *Metasys*® site.
 
-*Explanation* We have used the `--data-binary` option to specify a file that contains the payload we need to send to the server. The `-L` option instructs curl to follow redirects. The `-H` option specifies a `Content-Type` header
-which is required so the server know how to interpret the data we send it. The server responds by returning
+*Explanation* We have used the `--data-binary` option to specify a file that contains the payload we need to send to the server. The `-H` option specifies a `Content-Type` header
+which is required so the server knows how to interpret the data we send it. The server responds by returning
 a JSON document with two fields: `accessToken` and `expires`. The `expires` field lets us know when this token expires.
+
+**Note** If you do not see a valid response but instead see the following (or something similar), that means there is an issue with your SSL cert. See [Certificate Issues](#certificate-issues) for a discussion of possible solutions.
+
+> curl: (60) SSL certificate problem: self signed certificate
+> More details here: https://curl.haxx.se/docs/sslcerts.html
+>
+> curl failed to verify the legitimacy of the server and therefore could not
+> establish a secure connection to it. To learn more about this situation and
+> how to fix it, please visit the web page mentioned above.
 
 ### Use Access Token to Access a Resource
 
-Here's how you might use this access token to access one of the *Metasys*® APIs:
+Here's how you might use this access token to access one of the *Metasys*® APIs (copy and paste the token from the previous login):
 
 ```bash
-curl -L -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJ..." https://hostname/api/v1/networkDevices
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJ..." https://hostname/api/v2/networkDevices
 ```
 
 We are using the `-H` option to specify an `Authorization` header which is used to pass our access token.
@@ -79,8 +88,8 @@ for space.)
 **Warning** Be sure to protect your access token. When you are done with this example you should `unset TOKEN` or close your console to minimize the chance of leaking it.
 
 ```json
-$ TOKEN=$(curl --data-binary @credentials.json -L -H "Content-Type: application/json" https://hostname/api/v1/login | jq -r .accessToken)
-$ curl -L -H "Authorization: Bearer $TOKEN" https://hostname/api/v1/networkDevices
+$ TOKEN=$(curl --data-binary @credentials.json -H "Content-Type: application/json" https://hostname/api/v2/login | jq -r .accessToken)
+$ curl -H "Authorization: Bearer $TOKEN" https://hostname/api/v2/networkDevices
 {"total":12,"next":null,"previous":null,"items":[{"id":"f55a7799-ec10-5361-8569-04258bdd8070","itemReference":"Test-pc1:Test-NAE5510","name":"Test-NAE5510","type":"/enumSets/508/members/185","description":"Auth Cat Fire","firmwareVersion":"8.0.0.0449","category":"/enumSets/33/members/1","timeZone":"/enumSets/576/members/53","self":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070","parent":null,"networkDevices":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/networkDevices","equipment":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/equipment","spaces":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/spaces","objects":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/objects","attributes":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/attributes","alarms":"/networkDevices/f55a7799-ec10-5361-8569-04258bdd8070/alarms"},...]}
 $ unset TOKEN
 ```
@@ -98,14 +107,16 @@ The `login` endpoint accepts form encoded data as well. This makes it a little e
 doesn't require the use of a separate file.
 
 ```sh
-TOKEN=$(curl -L -d username=yourusername -d password=yourpassword https://hostname/api/login | jq -r .accessToken)
+TOKEN=$(curl -d username=yourusername -d password=yourpassword https://hostname/api/v2/login | jq -r .accessToken)
 ```
 
-You'll also notice that the responses that come back from the server are compressed. If you would like
+**Warning** Take care when writing scripts that include a password. It would be better to actually read the password from a credential store. Also this may not work if your password has special chars that the shell treats special (like `!`)
+
+You'll notice that the responses that come back from the server do not have any extra whitespace. If you would like
 them "pretty printed" you can use `jq` for that by simply passing it the identity filter `.`.
 
 ```sh
-$ curl -L -H "Authorization: Bearer $TOKEN" https://hostname/api/v1/networkDevices | jq .
+$ curl -H "Authorization: Bearer $TOKEN" https://hostname/api/v2/networkDevices | jq .
 {
   "total": 12,
   "next": null,
